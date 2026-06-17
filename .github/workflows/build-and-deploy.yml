@@ -18,8 +18,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - environment: Staging
-            subscription_secret: STAGING_AZURE_SUBSCRIPTION_ID
           - environment: Production
             subscription_secret: PRODUCTION_AZURE_SUBSCRIPTION_ID
     concurrency:
