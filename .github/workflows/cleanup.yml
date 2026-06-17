@@ -39,6 +39,8 @@ jobs:
         run: |
           $env:ACR_NAME = az acr list -g $env:AZURE_GROUP_DELIVERY --query [0].name -o tsv;
 
+          $repositories = az acr repository list -n $env:ACR_NAME -o json | ConvertFrom-Json;
+
           foreach ($repo in $repositories) 
           {
               $tags = az acr repository show-tags `
