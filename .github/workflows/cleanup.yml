@@ -11,7 +11,7 @@ env:
   AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }} 
   AZURE_GROUP_DELIVERY: ${{ vars.AZURE_RESOURCE_GROUP_DELIVERY }} 
   AZURE_SUBSCRIPTION_ID: ${{ github.ref == 'refs/heads/master' && secrets.PRODUCTION_AZURE_SUBSCRIPTION_ID || secrets.STAGING_AZURE_SUBSCRIPTION_ID }}
-  IMAGE_HISTORY_COUNT: 1
+  IMAGE_HISTORY_COUNT: 15
 jobs:
   cleanup:
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
                   --orderby time_desc `
                   --output json | ConvertFrom-Json;
 
-              $tagsToDelete = $tags | Select-Object -Skip $env:IMAGE_HISTORY_COUNT;
+              $tagsToDelete = $tags | Select-Object -Skip ([int]$env:IMAGE_HISTORY_COUNT);
 
               foreach ($tag in $tagsToDelete) 
               {
