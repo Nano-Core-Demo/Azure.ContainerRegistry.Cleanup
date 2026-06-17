@@ -18,8 +18,10 @@ jobs:
     strategy:
       matrix:
         include:
+          - environment: Staging
+            subscription_secret: STAGING_AZURE_SUBSCRIPTION_ID
           - environment: Production
-            subscription_id: ${{ secrets.PRODUCTION_AZURE_SUBSCRIPTION_ID }}
+            subscription_secret: PRODUCTION_AZURE_SUBSCRIPTION_ID
     concurrency:
       group: ${{ github.repository }}-${{ matrix.environment }}
       cancel-in-progress: true
@@ -30,7 +32,9 @@ jobs:
         shell: pwsh
         run: |
           az login --service-principal -u $env:AZURE_CLIENT_ID -p $env:AZURE_CLIENT_SECRET --tenant $env:AZURE_TENANT_ID -o none;
-          az account set -s ${{ matrix.subscription_id }} -o none;
+
+          $subscription = if ("${{ matrix.environment }}" -eq "Staging") { "${{ secrets.STAGING_AZURE_SUBSCRIPTION_ID }}" } else { "${{ secrets.PRODUCTION_AZURE_SUBSCRIPTION_ID }}" };
+          az account set -s $subscription -o none;
 
       - name: Azure Container Registry (ACR) Cleanup
         shell: pwsh
