@@ -18,8 +18,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - environment: Staging
           - environment: Production
-            subscription_secret: PRODUCTION_AZURE_SUBSCRIPTION_ID
     concurrency:
       group: ${{ github.repository }}-${{ matrix.environment }}
       cancel-in-progress: true
